@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import styled from "styled-components";
-import SearchBar from "../Componenets/Search.jsx";
-import ImageCard from "../Componenets/ImageCard.jsx";
+import SearchBar from "../Componenets/Search";
+import ImageCard from "../Componenets/ImageCard";
 import { CircularProgress } from "@mui/material";
 import { GetPosts } from "../Componenets/Api/index.js";
 
@@ -76,7 +76,7 @@ const Home = () => {
     setLoading(true);
     await GetPosts()
       .then((res) => {
-        console.log("get post data",res);
+        console.log("get post data", res);
         setLoading(false);
         setPosts(res?.data?.data);
         setFilteredPosts(res?.data?.data);
@@ -87,12 +87,11 @@ const Home = () => {
       });
   };
 
-
   useEffect(() => {
     getPosts();
   }, []);
-   //Search
-   useEffect(() => {
+
+  useEffect(() => {
     if (!search) {
       setFilteredPosts(posts);
     }
@@ -112,7 +111,7 @@ const Home = () => {
       setFilteredPosts(SearchFilteredPosts);
     }
   }, [posts, search]);
- 
+
   return (
     <Container>
       <Headline>
@@ -134,7 +133,7 @@ const Home = () => {
                   .slice()
                   .reverse()
                   .map((item, index) => (
-                    <ImageCard key={index} item={item} />
+                    <ImageCard key={index} item={item} src={item.generatedImage} />
                   ))}
               </>
             )}

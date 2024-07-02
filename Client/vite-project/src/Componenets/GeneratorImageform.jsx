@@ -6,6 +6,7 @@ import TextInput from "./TextInput"; // Ensure correct case
 import { AutoAwesome, CreateRounded } from "@mui/icons-material";
 import { CreatePost, GenerateAIImage } from "../Componenets/Api/index"; // Ensure correct path
 import GeneratorimageCard from "./GeneratorimageCard";
+import ImageCard from "./ImageCard"; 
 
 const Form = styled.div`
   flex: 1;
@@ -54,7 +55,6 @@ const Actions = styled.div`
 const ImageContainer = styled.div`
   margin-top: 20px;
 `;
-
 const GenerateImageForm = ({
   post: initialPost,
   createPostLoading: initialCreatePostLoading,
@@ -65,18 +65,21 @@ const GenerateImageForm = ({
   const [error, setError] = useState('');
   const [createPostLoading, setCreatePostLoading] = useState(initialCreatePostLoading || false);
   const [generateImageLoading, setGenerateImageLoading] = useState(initialGenerateImageLoading || false);
-
+  const [generatedImage, setGeneratedImage] = useState(null); // Add a new state to store the generated image
   const generateImageFun = async () => {
     if (!post.prompt) {
-      setError('Please enter a prompt');
+      setError("Please enter a prompt");
       return;
     }
     setGenerateImageLoading(true);
     try {
-      const res = await GenerateAIImage({ prompt: post.prompt });
-      setPost({ ...post, photo: `${res?.data?.photo}` });
+      const request = { prompt: post.prompt };
+      console.log("GenerateAIImage request:", request);
+      const res = await GenerateAIImage(request);
+      setGeneratedImage(res.data.photo); // Store the generated image in the state
+      setPost({ ...post, photo: res.data.photo });
     } catch (error) {
-      setError('Error generating image');
+      setError("Error generating image");
       console.error(error);
     } finally {
       setGenerateImageLoading(false);
@@ -85,7 +88,8 @@ const GenerateImageForm = ({
 
   const createPostFun = async () => {
     setCreatePostLoading(true);
-    await CreatePost(post)
+    const postData = { ...post, photo: post.photo };
+    await CreatePost(postData)
       .then((res) => {
         setCreatePostLoading(false);
         navigate("/");
@@ -95,9 +99,13 @@ const GenerateImageForm = ({
         setCreatePostLoading(false);
       });
   };
-
   return (
     <Form>
+      {/* <ImageContainer>
+        {generatedImage && ( // Render the ImageCard component only if the generated image is available
+          <ImageCard  />
+        )}
+      </ImageContainer> */}
       <Top>
         <Title>Generate Image with prompt</Title>
         <Desc>Write your prompt according to the image you want to generate!</Desc>

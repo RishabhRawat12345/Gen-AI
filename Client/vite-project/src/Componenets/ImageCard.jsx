@@ -45,11 +45,13 @@ const HoverOverlay = styled.div`
     opacity: 1;
   }
 `;
+
 const Prompt = styled.div`
   font-weight: 400px;
   font-size: 15px;
   color: ${({ theme }) => theme.white};
 `;
+
 const Author = styled.div`
   font-weight: 600px;
   font-size: 14px;

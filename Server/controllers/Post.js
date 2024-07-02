@@ -5,9 +5,9 @@ import { v2 as cloudinary } from "cloudinary";
 
 dotenv.config();
 
-cloudinary.config({ 
-  cloud_name: process.env.CLOUDINARY_CLOUD_NAME, 
-  api_key: process.env.CLOUDINARY_API_KEY, 
+cloudinary.config({
+  cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
+  api_key: process.env.CLOUDINARY_API_KEY,
   api_secret: process.env.CLOUDINARY_API_SECRET,
 });
 
@@ -15,12 +15,9 @@ cloudinary.config({
 export const getAllPosts = async (req, res, next) => {
   try {
     const posts = await Post.find({});
-    return res.status(200).json({ success: true, data: posts });
+    res.status(200).json({ success: true, data: posts });
   } catch (error) {
-    next(createError(
-      error.status || 500,
-      error?.response?.data?.error?.message || error?.message
-    ));
+    next(createError(error.status, error?.response?.data?.error?.message || error?.message));
   }
 };
 
@@ -34,11 +31,8 @@ export const createPost = async (req, res, next) => {
       prompt,
       photo: photoUrl?.secure_url,
     });
-    return res.status(201).json({ success: true, data: newPost });
+    res.status(201).json({ success: true, data: newPost });
   } catch (error) {
-    next(createError(
-      error.status || 500,
-      error?.response?.data?.error?.message || error?.message
-    ));
+    next(createError(error.status, error?.response?.data?.error?.message || error?.message));
   }
 };
